@@ -27,8 +27,8 @@
   ([callback]
    (on-path-change nil callback))
   ([options callback]
-   (let [{user-changes-only :user-changes-only} (merge options
-                                                       {:user-changes-only true})]
+   (let [{user-changes-only :user-changes-only} (merge {:user-changes-only true}
+                                                       options)]
      (swap! state-atom update :on-path-change-listeners (fn [listeners]
                                                           (conj listeners (fn [event]
                                                                             (when (or (not user-changes-only)
