@@ -24,14 +24,14 @@
                 ;; the presence of a :figwheel configuration here
                 ;; will cause figwheel to inject the figwheel client
                 ;; into your build
-                :figwheel     {:on-jsload "example-app.main/on-js-reload"
+                :figwheel     {;; :on-jsload "example-app.main/on-js-reload"
                                ;; :open-urls will pop open your application
                                ;; in the default browser once Figwheel has
                                ;; started and complied your application.
                                ;; Comment this out once it no longer serves you.
-                               :open-urls ["http://localhost:3448/index.html"]}
+                               :open-urls ["http://localhost:3449/index.html"]}
 
-                :compiler     {:main                 example-app.main
+                :compiler     {:main                 example.main
                                :asset-path           "js/compiled/out"
                                :output-to            "resources/public/js/compiled/example-app.js"
                                :output-dir           "resources/public/js/compiled/out"
@@ -45,7 +45,7 @@
              :server-port 3449                              ;; default
              ;; :server-ip "127.0.0.1"
 
-             :css-dirs    ["resources/public/css"]          ;; watch and update CSS
+             :css-dirs    ["resources/public/css"]}          ;; watch and update CSS
 
              ;; Start an nREPL server into the running figwheel process
              ;; :nrepl-port 7888
@@ -75,7 +75,7 @@
 
              ;; to configure a different figwheel logfile path
              ;; :server-logfile "tmp/logs/figwheel-logfile.log"
-             }
+
 
 
   ;; setting up nREPL for Figwheel and ClojureScript dev
