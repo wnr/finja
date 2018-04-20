@@ -39,4 +39,4 @@
 
 (defn remove-listener
   [key]
-  (swap! state-atom dissoc key))
+  (swap! state-atom update :on-path-change-listeners dissoc key))
