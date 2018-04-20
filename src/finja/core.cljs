@@ -5,11 +5,11 @@
             [goog.history.EventType :as EventType])
   (:import goog.history.Html5History))
 
-(def state-atom (atom {:on-path-change-listeners #{}}))
+(def state-atom (atom {:on-path-change-listeners {}}))
 
 (defonce history-instance (let [history-instance (Html5History.)]
                             (goog.events/listen history-instance EventType/NAVIGATE (fn [event]
-                                                                                      (doseq [listener (:on-path-change-listeners (deref state-atom))]
+                                                                                      (doseq [[_ listener] (:on-path-change-listeners (deref state-atom))]
                                                                                         (listener event))))
                             (doto history-instance (.setEnabled true))))
 
@@ -27,10 +27,16 @@
   ([callback]
    (on-path-change nil callback))
   ([options callback]
-   (let [{user-changes-only :user-changes-only} (merge {:user-changes-only true}
+   (let [{key               :key
+          user-changes-only :user-changes-only} (merge {:key               (random-uuid)
+                                                        :user-changes-only true}
                                                        options)]
-     (swap! state-atom update :on-path-change-listeners (fn [listeners]
-                                                          (conj listeners (fn [event]
-                                                                            (when (or (not user-changes-only)
-                                                                                      (.-isNavigation event)) ;; isNavigation = true means that the user made the change.
-                                                                              (callback {:path (.-token event)})))))))))
+     (swap! state-atom assoc-in [:on-path-change-listeners key] (fn [event]
+                                                                  (when (or (not user-changes-only)
+                                                                            (.-isNavigation event)) ;; isNavigation = true means that the user made the change.
+                                                                    (callback {:path (.-token event)}))))
+     key)))
+
+(defn remove-listener
+  [key]
+  (swap! state-atom dissoc key))
